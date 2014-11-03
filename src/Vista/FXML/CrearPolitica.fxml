@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="505.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controlador.CrearPoliticaController">
+    <stylesheets>
+        <URL value="@/Vista/CSS/crearpolitica.css" />
+    </stylesheets>
+   <children>
+      <TitledPane collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" text="Politica de Respaldo" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <VBox alignment="TOP_CENTER" prefHeight="465.0" prefWidth="598.0">
+               <children>
+                  <Label fx:id="lb_sid" text="Base de Datos">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER" prefHeight="48.0" prefWidth="578.0">
+                     <children>
+                        <Label text="Nombre:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="tf_nombre" prefHeight="25.0" prefWidth="177.0">
+                           <HBox.margin>
+                              <Insets right="30.0" />
+                           </HBox.margin>
+                        </TextField>
+                        <Label text="Descripcion:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="tf_desc" prefHeight="25.0" prefWidth="220.0" />
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="0.0" prefWidth="578.0" />
+                  <HBox alignment="CENTER" prefHeight="55.0" prefWidth="578.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Domingo" />
+                              <ComboBox fx:id="cb_domingo" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Lunes" />
+                              <ComboBox fx:id="cb_lunes" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Martes" />
+                              <ComboBox fx:id="cb_martes" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Miercoles" />
+                              <ComboBox fx:id="cb_miercoles" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Jueves" />
+                              <ComboBox fx:id="cb_jueves" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Viernes" />
+                              <ComboBox fx:id="cb_viernes" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="100.0" prefWidth="133.0">
+                           <children>
+                              <Label text="Sabado" />
+                              <ComboBox fx:id="cb_sabado" prefWidth="150.0" promptText="Hora" />
+                           </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <Separator prefHeight="1.0" prefWidth="578.0" />
+                  <HBox alignment="CENTER" prefHeight="28.0" prefWidth="578.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <children>
+                        <VBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="115.0">
+                           <children>
+                              <RadioButton fx:id="rd_total" mnemonicParsing="false" text="Respaldo Total">
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                              <RadioButton fx:id="rd_parcial" mnemonicParsing="false" text="Respaldo Parcial">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </RadioButton>
+                           </children>
+                           <HBox.margin>
+                              <Insets bottom="2.0" top="2.0" />
+                           </HBox.margin>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="0.0" />
+                        <CheckBox fx:id="chb_control" mnemonicParsing="false" text="Controls Files">
+                           <HBox.margin>
+                              <Insets left="30.0" right="15.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="chb_log" mnemonicParsing="false" text="Logs">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="8.0" prefWidth="578.0" />
+                  <VBox fx:id="vbox_panel" prefHeight="247.0" prefWidth="578.0">
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="49.0" prefWidth="578.0">
+                           <children>
+                              <TextField fx:id="tf_buscarts" prefHeight="25.0" prefWidth="211.0" promptText="Buscar Tablespace">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </HBox.margin>
+                              </TextField>
+                              <ComboBox fx:id="cb_modo" prefHeight="25.0" prefWidth="129.0" promptText="Modo">
+                                 <HBox.margin>
+                                    <Insets left="5.0" right="5.0" />
+                                 </HBox.margin>
+                              </ComboBox>
+                           </children>
+                           <padding>
+                              <Insets left="5.0" />
+                           </padding>
+                        </HBox>
+                        <TableView fx:id="tv_tablespace" prefHeight="210.0" prefWidth="578.0">
+                          <columns>
+                            <TableColumn fx:id="tc_nombre" prefWidth="255.0" text="Nombre" />
+                              <TableColumn fx:id="tc_agregar" prefWidth="75.0" text="Agregar" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <HBox alignment="CENTER" prefHeight="35.0" prefWidth="578.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#cancelAction" text="Cancelar">
+                           <HBox.margin>
+                              <Insets right="15.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#aceptarAction" text="Aceptar">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </TitledPane>
+   </children>
+</AnchorPane>

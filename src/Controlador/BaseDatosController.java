@@ -6,10 +6,15 @@
 package Controlador;
 
 import Modelo.Beans.BaseDatos;
+import Modelo.Beans.Politica;
+import Modelo.Connection.Coneccion;
 import Modelo.Conteiners.RegistroBasesDatos;
+import Modelo.Conteiners.RegistroPoliticas;
 import Vista.Custom.Exceptions;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -53,14 +59,28 @@ public class BaseDatosController implements Initializable {
     TableColumn<BaseDatos,String> tc_usuario;
     @FXML
     AnchorPane root;
+    
+    /*-----------------------Tab Politicas------------------------*/
+    @FXML
+    TextField tf_sidPolitica;
+    @FXML
+    TextField tf_nombrePolitica;
+    @FXML
+    TableView<Politica> tv_politicas;
+    @FXML
+    TableColumn<Politica, String> tc_sidPolitica;
+    @FXML
+    TableColumn<Politica, String> tc_nombrePolitica;
+    @FXML
+    TableColumn<Politica, String> tc_descPolitica;
+    
     private Stage st;
     /**
      * Initializes the controller class.
      * @param url
      * @param rb
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    private void initializeTabBaseDatos(){
         this.tc_host.setCellValueFactory(new PropertyValueFactory("address"));
         this.tc_puerto.setCellValueFactory(new PropertyValueFactory("port"));
         this.tc_sid.setCellValueFactory(new PropertyValueFactory("sid"));
@@ -75,31 +95,63 @@ public class BaseDatosController implements Initializable {
                     return true;
                 else if(bd.getAddress().toLowerCase().contains(lowerCaseFilter))
                     return true;
-                else if(bd.getAddress().toLowerCase().contains(lowerCaseFilter))
-                    return true;
                 return false;
             });
 	});
         this.tv_bd.setRowFactory((TableView<BaseDatos> param) -> {
             final TableRow<BaseDatos> row = new TableRow<>();
             final ContextMenu rowMenu = new ContextMenu();
-            rowMenu.getItems().addAll(this.modificarMenuItem(row), this.eliminarMenuItem(row));
+            rowMenu.getItems().addAll(this.crearPoliticaMenuItem(row), this.modificarMenuItem(row), this.eliminarMenuItem(row));
             row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty()))
                .then(rowMenu)
                .otherwise((ContextMenu)null));
             return row;
         });
-        RegistroBasesDatos.getInstance().agregarBaseDatos(new BaseDatos("localhost",1521,"XE","sys","123"));
+    }
+    private void initializeTabPoliticas(){
+        this.tc_sidPolitica.setCellValueFactory(new PropertyValueFactory("sid"));
+        this.tc_nombrePolitica.setCellValueFactory(new PropertyValueFactory("nombre"));
+        this.tc_descPolitica.setCellValueFactory(new PropertyValueFactory("desc"));
+        RegistroPoliticas.getInstance().getSortedList().comparatorProperty().bind(this.tv_politicas.comparatorProperty());
+        this.tv_politicas.setItems(RegistroPoliticas.getInstance().getSortedList());
+        this.tf_sidPolitica.textProperty().addListener((observable, oldValue, newValue) -> {
+            RegistroPoliticas.getInstance().getFilteredList().setPredicate(politica -> {
+                return filtroPoliticas(true, politica);
+            });
+	});
+        this.tf_nombrePolitica.textProperty().addListener((observable, oldValue, newValue) -> {
+            RegistroPoliticas.getInstance().getFilteredList().setPredicate(politica -> {
+                return filtroPoliticas(false,politica);
+            });
+	});
+        this.tv_politicas.setRowFactory((TableView<Politica> param) -> {
+            final TableRow<Politica> row = new TableRow<>();
+            final ContextMenu rowMenu = new ContextMenu();
+            rowMenu.getItems().addAll(this.modificarPoliticaMenuItem(row));
+            row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty()))
+               .then(rowMenu)
+               .otherwise((ContextMenu)null));
+            return row;
+        });
+    }
+    
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        initializeTabBaseDatos();
+        initializeTabPoliticas();
+        ArrayList<String> list = new ArrayList();list.add("SYSAUX");list.add("SYSTEM");
+        RegistroBasesDatos.getInstance().agregarBaseDatos(new BaseDatos("localhost",1521,"XE","sys as sysdba","root"));
+        RegistroPoliticas.getInstance().agregarPolitica(new Politica("Politica 1","Una descripcion",false,false,false,"Incremetal 0",new BaseDatos("localhost",1521,"XE","sys as sysdba","root"),list));
     }    
     
+    /*-----------------------Tab Base de Datos----------------------------*/
     private MenuItem eliminarMenuItem(TableRow<BaseDatos> row){
         MenuItem removeItem = new MenuItem("Eliminar");
-            removeItem.setOnAction((ActionEvent event) -> {
-                RegistroBasesDatos.getInstance().eliminarBaseDatos(row.getItem());
+        removeItem.setOnAction((ActionEvent event) -> {
+            RegistroBasesDatos.getInstance().eliminarBaseDatos(row.getItem());
         });
         return removeItem;
     }
-
     private MenuItem modificarMenuItem(TableRow<BaseDatos> row){
         MenuItem editItem = new MenuItem("Editar");
         editItem.setOnAction((ActionEvent event)->{
@@ -107,12 +159,13 @@ public class BaseDatosController implements Initializable {
         });
         return editItem;
     }
-    
-    @FXML
-    private void crearBaseDatosBarMenuAction(ActionEvent event){
-        this.crearBDStage(null);
+    private MenuItem crearPoliticaMenuItem(TableRow<BaseDatos> row){
+        MenuItem editItem = new MenuItem("Agregar Politica");
+        editItem.setOnAction((ActionEvent event)->{
+             crearPoliticaStage(new Politica(row.getItem()),false);
+        });
+        return editItem;
     }
-    
     private void crearBDStage(BaseDatos bd){
         FXMLLoader loader = new FXMLLoader(BaseDatosController.class.getResource("/Vista/FXML/CrearBD.fxml"));
             final Stage secondaryStage = new Stage(StageStyle.UTILITY);
@@ -128,5 +181,43 @@ public class BaseDatosController implements Initializable {
             secondaryStage.setResizable(false);
             secondaryStage.initModality(Modality.APPLICATION_MODAL);
             secondaryStage.show();
+    }
+    
+    /*-----------------------Tab Politicas-------------------------------*/
+    private boolean filtroPoliticas(Boolean flag, Politica pol){
+        if(this.tf_nombrePolitica.getText().isEmpty() && this.tf_sidPolitica.getText().isEmpty()) return true;
+        if(pol.getNombre().toLowerCase().contains(this.tf_nombrePolitica.getText().toLowerCase()) &&
+           pol.getSID().toLowerCase().contains(this.tf_sidPolitica.getText().toLowerCase()))
+            return true;
+        return false;
+    }
+    private void crearPoliticaStage(Politica pol, boolean modificar){
+        FXMLLoader loader = new FXMLLoader(BaseDatosController.class.getResource("/Vista/FXML/CrearPolitica.fxml"));
+            final Stage secondaryStage = new Stage(StageStyle.UTILITY);
+        try {
+            Coneccion.getInstance().conectar(pol.getBaseDatos());/*Trata de conectarse*/
+            secondaryStage.setScene(new Scene((Pane) loader.load()));
+            CrearPoliticaController controller = loader.<CrearPoliticaController>getController();
+            controller.initData(pol,secondaryStage, modificar);
+            secondaryStage.initOwner(st);
+            secondaryStage.setResizable(false);
+            secondaryStage.initModality(Modality.APPLICATION_MODAL);
+            secondaryStage.show();
+        } catch (IOException | SQLException ex) {
+            Exceptions.ExceptionDialog(ex,st);
+            Logger.getLogger(BaseDatosController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private MenuItem modificarPoliticaMenuItem(TableRow<Politica> row){
+        MenuItem editItem = new MenuItem("Editar");
+        editItem.setOnAction((ActionEvent event)->{
+            crearPoliticaStage(row.getItem(),true);
+        });
+        return editItem;
+    }    
+    
+    @FXML
+    private void crearBaseDatosBarMenuAction(ActionEvent event){
+        this.crearBDStage(null);
     }
 }

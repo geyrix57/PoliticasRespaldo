@@ -25,7 +25,6 @@ public class PoliticasRespaldo extends Application {
         Scene scene = new Scene(root);
         stage.setResizable(false);
         stage.setScene(scene);
-       // if(root.getChildrenUnmodifiable().get(1).getParent().getScene() != null) System.out.print(root.getChildrenUnmodifiable().get(1).getParent());
         stage.show();
     }
 

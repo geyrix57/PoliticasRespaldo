@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.input.*?>
 <?import java.lang.*?>
 <?import java.net.*?>
@@ -57,26 +58,39 @@
                            </children></AnchorPane>
                   </content>
                 </Tab>
-                  <Tab text="Roles">
+                  <Tab text="Politicas de Respaldo">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <HBox alignment="CENTER" layoutY="11.0" prefHeight="41.0" prefWidth="692.0" AnchorPane.bottomAnchor="327.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="244.0" promptText="Buscar Rol" />
+                                    <TextField fx:id="tf_sidPolitica" prefHeight="25.0" prefWidth="180.0" promptText="Buscar SID">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin></TextField>
+                                    <TextField fx:id="tf_nombrePolitica" prefHeight="25.0" prefWidth="244.0" promptText="Buscar Politica">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin>
+                                    </TextField>
                                  </children>
                               </HBox>
-                              <TableView layoutX="10.0" layoutY="66.0" prefHeight="304.0" prefWidth="667.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0" />
+                              <TableView fx:id="tv_politicas" layoutX="10.0" layoutY="66.0" prefHeight="304.0" prefWidth="667.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0">
+                                 <columns>
+                                    <TableColumn fx:id="tc_sidPolitica" prefWidth="178.0" text="SID" />
+                                    <TableColumn fx:id="tc_nombrePolitica" prefWidth="198.0" text="Politica" />
+                                    <TableColumn fx:id="tc_descPolitica" prefWidth="311.0" text="Descripcion" />
+                                 </columns></TableView>
                            </children></AnchorPane>
                     </content>
                   </Tab>
-                  <Tab text="Usuarios">
+                  <Tab text="Reportes">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
                               <HBox alignment="CENTER" prefHeight="41.0" prefWidth="692.0" AnchorPane.bottomAnchor="327.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="12.0">
                                  <children>
-                                    <TextField prefHeight="25.0" prefWidth="244.0" promptText="Buscar Usuario" />
+                                    <TextField prefHeight="25.0" prefWidth="244.0" promptText="Buscar SID" />
                                  </children>
                               </HBox>
                               <TableView layoutX="13.0" layoutY="53.0" prefHeight="304.0" prefWidth="667.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0" />

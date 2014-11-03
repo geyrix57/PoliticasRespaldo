@@ -35,11 +35,11 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tf_puerto" prefHeight="25.0" prefWidth="208.0">
+                        <NumberTextField fx:id="tf_puerto" prefHeight="25.0" prefWidth="208.0">
                            <HBox.margin>
                               <Insets left="8.0" />
                            </HBox.margin>
-                        </TextField>
+                        </NumberTextField>
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="578.0">

@@ -11,9 +11,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -31,16 +28,18 @@ public class Coneccion {
     }
     
     public boolean conectar(BaseDatos bd) throws SQLException{
+        if(this.isConnected()) this.close();
         con = DriverManager.getConnection(bd.getUrl(),bd.getUser(),bd.getPassword());
         return true;
     }
     
     public boolean isConnected() throws SQLException{
+        if(con == null) return false;
         return !con.isClosed();
     }
     
     public void close() throws SQLException{
-        con.close();  
+        con.close();
     }
     
     public ResultSet ExecuteQuery(String sql) throws SQLException{
