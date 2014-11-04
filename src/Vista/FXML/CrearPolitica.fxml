@@ -141,9 +141,14 @@
                            </HBox.margin>
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="48.0" prefWidth="0.0" />
+                        <ComboBox fx:id="cb_modo" prefHeight="25.0" prefWidth="129.0" promptText="Modo">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" />
+                           </HBox.margin>
+                        </ComboBox>
                         <CheckBox fx:id="chb_control" mnemonicParsing="false" text="Controls Files">
                            <HBox.margin>
-                              <Insets left="30.0" right="15.0" />
+                              <Insets left="20.0" right="15.0" />
                            </HBox.margin>
                         </CheckBox>
                         <CheckBox fx:id="chb_log" mnemonicParsing="false" text="Logs">
@@ -163,11 +168,6 @@
                                     <Insets left="5.0" right="5.0" />
                                  </HBox.margin>
                               </TextField>
-                              <ComboBox fx:id="cb_modo" prefHeight="25.0" prefWidth="129.0" promptText="Modo">
-                                 <HBox.margin>
-                                    <Insets left="5.0" right="5.0" />
-                                 </HBox.margin>
-                              </ComboBox>
                            </children>
                            <padding>
                               <Insets left="5.0" />

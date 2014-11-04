@@ -78,8 +78,9 @@
                               <TableView fx:id="tv_politicas" layoutX="10.0" layoutY="66.0" prefHeight="304.0" prefWidth="667.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="13.0" AnchorPane.rightAnchor="13.0">
                                  <columns>
                                     <TableColumn fx:id="tc_sidPolitica" prefWidth="178.0" text="SID" />
-                                    <TableColumn fx:id="tc_nombrePolitica" prefWidth="198.0" text="Politica" />
-                                    <TableColumn fx:id="tc_descPolitica" prefWidth="311.0" text="Descripcion" />
+                                    <TableColumn fx:id="tc_nombrePolitica" prefWidth="137.0" text="Politica" />
+                                    <TableColumn fx:id="tc_descPolitica" prefWidth="277.0" text="Descripcion" />
+                                    <TableColumn fx:id="tc_activo" prefWidth="75.0" text="Activo" />
                                  </columns></TableView>
                            </children></AnchorPane>
                     </content>

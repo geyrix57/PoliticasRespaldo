@@ -8,12 +8,16 @@ package Controlador;
 import Modelo.Beans.Politica;
 import Modelo.Beans.Tablespace;
 import Modelo.Connection.CargarDatos;
+import Modelo.Connection.Cliente;
 import Modelo.Conteiners.RegistroPoliticas;
 import Vista.Custom.CheckBoxTableCell;
 import Vista.Custom.Exceptions;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -140,7 +144,13 @@ public class CrearPoliticaController implements Initializable {
         this.chb_log.selectedProperty().bindBidirectional(this.pol.logsProperty());
     }
     private void cargarTableSpaces() throws SQLException{
-        masterData = masterData = FXCollections.observableArrayList(CargarDatos.cargarTablespaces(pol));
+        if(!modificar) masterData = FXCollections.observableArrayList(CargarDatos.cargarTablespaces(pol));
+        else {
+            masterData = FXCollections.observableArrayList();
+            pol.getTablespaces().stream().forEach((ts) -> {
+                masterData.add(new Tablespace(ts,true,pol));
+            });
+        }
         FilteredList<Tablespace> filteredData = new FilteredList<>(masterData, p -> true);
         SortedList<Tablespace> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(this.tv_tablespace.comparatorProperty());
@@ -225,25 +235,28 @@ public class CrearPoliticaController implements Initializable {
         }
         if(this.tf_desc.textProperty().get()==null||this.tf_desc.textProperty().get().isEmpty())
             this.tf_desc.setText("Sin descripcion.");
-        if(this.rd_parcial.isSelected())
+        if(this.cb_modo.getValue() == null || this.cb_modo.getValue().toString().isEmpty()){
+                Exceptions.ErrorDialog("Campos vacios", "Debe seleccionar el modo Incremental 0/Incremetal 1.", st);
+                return false;
+        }
+        if(this.rd_parcial.isSelected()){
             if(this.pol.getTablespaces().isEmpty()){
                 Exceptions.ErrorDialog("Campos vacios", "Debe seleccionar al menos un tablespace.", st);
                 return false;
             }
-            else if(this.cb_modo.getValue() == null || this.cb_modo.getValue().toString().isEmpty()){
-                Exceptions.ErrorDialog("Campos vacios", "Debe seleccionar el modo Incremental 0/Incremetal 1.", st);
+        }
+        else{
+            boolean t = true;
+            for(Object o:pol.getDias().values()){
+                if(((StringProperty)o).get() != null && !((StringProperty)o).get().isEmpty() && !((StringProperty)o).get().equals("N.A.")){
+                    t = false;
+                    break;
+                }
+            }
+            if(t){
+                Exceptions.ErrorDialog("Campos vacios", "Debe seleccionar al menos un dia.", st);
                 return false;
             }
-        boolean t = true;
-        for(Object o:pol.getDias().values()){
-            if(((StringProperty)o).get() != null && !((StringProperty)o).get().isEmpty()){
-                t = false;
-                break;
-            }
-        }
-        if(t){
-            Exceptions.ErrorDialog("Campos vacios", "Debe seleccionar al menos un dia.", st);
-            return false;
         }
         return true;
     }
@@ -255,11 +268,20 @@ public class CrearPoliticaController implements Initializable {
     @FXML
     private void aceptarAction(ActionEvent event){
         if(!modificar){
-            if(validarCampos()){    
-                RegistroPoliticas.getInstance().agregarPolitica(pol);
-                Exceptions.InformationDialog("La politica ha sido registrada!!", st);
+            if(validarCampos()){
+                try {
+                    RegistroPoliticas.getInstance().agregarPolitica(pol);
+                    Exceptions.InformationDialog("La politica ha sido registrada!!", st);
+                    Cliente c = new Cliente();
+                    c.enviarMensaje(pol);
+                } catch (IOException | InterruptedException | ClassNotFoundException ex) {
+                    pol.setActivo(false);
+                    Exceptions.ExceptionDialog(ex, st);
+                    Exceptions.ErrorDialog("Activacion de Politica", "No se pudo activar la politica verifique el Ejecutor y Active mas tarde", st);
+                    Logger.getLogger(CrearPoliticaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
-        this.st.close();
+        this.st.close();    
     }
 }

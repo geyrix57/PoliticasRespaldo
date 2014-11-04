@@ -14,7 +14,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author geykel
  */
-public class BaseDatos {
+public class BaseDatos{
     public BaseDatos(String address, Integer port, String sid, String user, String password){
         this.sid = new SimpleStringProperty(sid);
         this.address = new SimpleStringProperty(address);

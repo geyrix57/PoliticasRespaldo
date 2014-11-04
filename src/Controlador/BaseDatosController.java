@@ -7,9 +7,11 @@ package Controlador;
 
 import Modelo.Beans.BaseDatos;
 import Modelo.Beans.Politica;
+import Modelo.Connection.Cliente;
 import Modelo.Connection.Coneccion;
 import Modelo.Conteiners.RegistroBasesDatos;
 import Modelo.Conteiners.RegistroPoliticas;
+import Vista.Custom.CheckBoxTableCell;
 import Vista.Custom.Exceptions;
 import java.io.IOException;
 import java.net.URL;
@@ -73,6 +75,8 @@ public class BaseDatosController implements Initializable {
     TableColumn<Politica, String> tc_nombrePolitica;
     @FXML
     TableColumn<Politica, String> tc_descPolitica;
+    @FXML
+    TableColumn<Politica, Boolean> tc_activo; 
     
     private Stage st;
     /**
@@ -112,6 +116,14 @@ public class BaseDatosController implements Initializable {
         this.tc_sidPolitica.setCellValueFactory(new PropertyValueFactory("sid"));
         this.tc_nombrePolitica.setCellValueFactory(new PropertyValueFactory("nombre"));
         this.tc_descPolitica.setCellValueFactory(new PropertyValueFactory("desc"));
+        this.tc_activo.setCellValueFactory(new PropertyValueFactory("activo"));
+        this.tc_activo.setCellFactory((TableColumn<Politica, Boolean> p) ->{ 
+            CheckBoxTableCell n = new CheckBoxTableCell<>();
+                n.setDisable(true);
+                n.setOpacity(1.0);
+            return n;
+        });
+        
         RegistroPoliticas.getInstance().getSortedList().comparatorProperty().bind(this.tv_politicas.comparatorProperty());
         this.tv_politicas.setItems(RegistroPoliticas.getInstance().getSortedList());
         this.tf_sidPolitica.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -127,7 +139,7 @@ public class BaseDatosController implements Initializable {
         this.tv_politicas.setRowFactory((TableView<Politica> param) -> {
             final TableRow<Politica> row = new TableRow<>();
             final ContextMenu rowMenu = new ContextMenu();
-            rowMenu.getItems().addAll(this.modificarPoliticaMenuItem(row));
+            rowMenu.getItems().addAll(this.modificarPoliticaMenuItem(row),activarPoliticaMenuItem(row));
             row.contextMenuProperty().bind(Bindings.when(Bindings.isNotNull(row.itemProperty()))
                .then(rowMenu)
                .otherwise((ContextMenu)null));
@@ -195,7 +207,7 @@ public class BaseDatosController implements Initializable {
         FXMLLoader loader = new FXMLLoader(BaseDatosController.class.getResource("/Vista/FXML/CrearPolitica.fxml"));
             final Stage secondaryStage = new Stage(StageStyle.UTILITY);
         try {
-            Coneccion.getInstance().conectar(pol.getBaseDatos());/*Trata de conectarse*/
+            if(!modificar) Coneccion.getInstance().conectar(pol.getBaseDatos());/*Trata de conectarse*/
             secondaryStage.setScene(new Scene((Pane) loader.load()));
             CrearPoliticaController controller = loader.<CrearPoliticaController>getController();
             controller.initData(pol,secondaryStage, modificar);
@@ -209,12 +221,27 @@ public class BaseDatosController implements Initializable {
         }
     }
     private MenuItem modificarPoliticaMenuItem(TableRow<Politica> row){
-        MenuItem editItem = new MenuItem("Editar");
+        MenuItem editItem = new MenuItem("Detalles");
         editItem.setOnAction((ActionEvent event)->{
             crearPoliticaStage(row.getItem(),true);
         });
         return editItem;
     }    
+    private MenuItem activarPoliticaMenuItem(TableRow<Politica> row){
+        MenuItem editItem = new MenuItem("Activar/Desactivar");
+        editItem.setOnAction((ActionEvent event)->{
+            Cliente c = new Cliente();
+            try {
+                c.enviarMensaje(row.getItem());
+                row.getItem().setActivo(true);
+            } catch (IOException | InterruptedException | ClassNotFoundException ex) {
+                Exceptions.ExceptionDialog(ex, st);
+                Exceptions.ErrorDialog("Activacion de Politica", "No se pudo activar la politica verifique el Ejecutor y Active mas tarde", st);
+                Logger.getLogger(CrearPoliticaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+        return editItem;
+    }
     
     @FXML
     private void crearBaseDatosBarMenuAction(ActionEvent event){

@@ -7,6 +7,7 @@ package Modelo.Beans;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +17,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author geykel
  */
-public class Politica {
+public class Politica{
     public Politica(String nombre, String desc, Boolean full, Boolean control, Boolean logs, String modo, BaseDatos db){
         this.nombre = new SimpleStringProperty(nombre);
         this.desc = new SimpleStringProperty(desc);
@@ -53,21 +54,6 @@ public class Politica {
         this.db = bd;
         inicializarDias();
     }
-    /*public Politica(Politica p){
-        this.db = p.getBaseDatos();
-        this.modo = new SimpleStringProperty(p.modoProperty().get());
-        this.nombre = new SimpleStringProperty(p.getNombre());
-        this.desc = new SimpleStringProperty(p.getDesc());
-        this.sid = new SimpleStringProperty(this.db.getSid());
-        this.full = new SimpleBooleanProperty(p.fullProperty().get());
-        this.control = new SimpleBooleanProperty(p.controlProperty().get());
-        this.logs = new SimpleBooleanProperty(p.logsProperty().get());
-        this.tablespaces = (ArrayList)p.getTablespaces().clone();
-        this.dias = new HashMap();
-        for(int i=0;i<7;i++){
-            this.dias.put(i,new SimpleStringProperty(p.getDias().get(i).get()));
-        }
-    }*/
     private void inicializarDias(){
         this.dias = new HashMap();
         for(int i=0;i<7;i++)
@@ -105,18 +91,6 @@ public class Politica {
     public void eliminarTablespace(String tablespace){
         this.tablespaces.remove(tablespace);
     }
-    /*public void copy(Politica p){
-        this.db = p.getBaseDatos();
-        this.modo.set(p.modoProperty().get());
-        this.nombre.set(p.getNombre());
-        this.desc.set(p.getDesc());
-        this.sid.set(this.db.getSid());
-        this.full.set(p.fullProperty().get());
-        this.control.set(p.controlProperty().get());
-        this.logs.set(p.logsProperty().get());
-        this.tablespaces = (ArrayList)p.getTablespaces().clone();
-        this.dias = (HashMap)p.getDias().clone();
-    }*/
     
     public BaseDatos getBaseDatos(){
         return this.db;
@@ -130,16 +104,46 @@ public class Politica {
     public String getDesc(){
         return this.desc.get();
     }
-    public ArrayList getTablespaces(){
+    public ArrayList<String> getTablespaces(){
         return this.tablespaces;
     }
     public StringProperty getDia(int ind){
         return this.dias.get(ind);
     }
+    public BooleanProperty activoProperty(){
+        return this.activo;
+    }
     public HashMap<Integer,StringProperty> getDias(){
         return this.dias;
     }
+    public Boolean getActivo(){
+        return this.activo.get();
+    }
+    public void setActivo(Boolean a){
+        this.activo.set(a);
+    }
     
+    public PoliticaEnvio generarPoliticaEnvio(){
+        HashMap<Integer,Integer> nd = new HashMap();
+        for(int i=0;i<7;i++){
+            if(dias.get(i).get() != null){
+                StringTokenizer tokens=new StringTokenizer(dias.get(i).get(), ":");
+                nd.put(i, Integer.parseInt(tokens.nextToken()));
+            }
+        }
+        PoliticaEnvio p= new PoliticaEnvio(this.getSID(),this.db.getUser(),this.getBaseDatos().getPassword(),this.getNombre(),this.full.get(),this.control.get(),this.logs.get(),this.modo.get(),nd,this.tablespaces);
+        p.setActivo(this.activo.get());
+        return p;
+    }
+    
+    @Override
+    public String toString(){
+        String str = "Nombre: "+this.getNombre()+" Descripcion: "+this.getDesc()+"\n";
+        str +=this.tablespaces.toString();
+        return str;
+    }
+    
+    private BooleanProperty activo = new SimpleBooleanProperty(true);
     private final StringProperty nombre;
     private final StringProperty desc;
     private final StringProperty sid;
@@ -148,7 +152,6 @@ public class Politica {
     private final BooleanProperty logs;
     private final StringProperty modo;
     private HashMap<Integer,StringProperty> dias;
-    
     private BaseDatos db;
     private ArrayList<String> tablespaces;
     
