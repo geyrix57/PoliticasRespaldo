@@ -274,14 +274,15 @@ public class CrearPoliticaController implements Initializable {
                     Exceptions.InformationDialog("La politica ha sido registrada!!", st);
                     Cliente c = new Cliente();
                     c.enviarMensaje(pol);
+                    Exceptions.InformationDialog("La politica ha sido Activada correctamennte.", st);
                 } catch (IOException | InterruptedException | ClassNotFoundException ex) {
                     pol.setActivo(false);
                     Exceptions.ExceptionDialog(ex, st);
                     Exceptions.ErrorDialog("Activacion de Politica", "No se pudo activar la politica verifique el Ejecutor y Active mas tarde", st);
                     Logger.getLogger(CrearPoliticaController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                this.st.close();
             }
-        }
-        this.st.close();    
+        }  
     }
 }

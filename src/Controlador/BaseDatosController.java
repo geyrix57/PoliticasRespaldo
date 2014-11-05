@@ -152,8 +152,7 @@ public class BaseDatosController implements Initializable {
         initializeTabBaseDatos();
         initializeTabPoliticas();
         ArrayList<String> list = new ArrayList();list.add("SYSAUX");list.add("SYSTEM");
-        RegistroBasesDatos.getInstance().agregarBaseDatos(new BaseDatos("localhost",1521,"XE","sys as sysdba","root"));
-        RegistroPoliticas.getInstance().agregarPolitica(new Politica("Politica 1","Una descripcion",false,false,false,"Incremetal 0",new BaseDatos("localhost",1521,"XE","sys as sysdba","root"),list));
+        RegistroBasesDatos.getInstance().agregarBaseDatos(new BaseDatos("localhost",1521,"XE","rmanuser","rmanuser"));
     }    
     
     /*-----------------------Tab Base de Datos----------------------------*/
@@ -232,8 +231,11 @@ public class BaseDatosController implements Initializable {
         editItem.setOnAction((ActionEvent event)->{
             Cliente c = new Cliente();
             try {
+                System.out.println(row.getItem().toString());
                 c.enviarMensaje(row.getItem());
-                row.getItem().setActivo(true);
+                row.getItem().setActivo(!row.getItem().getActivo());
+                if(row.getItem().getActivo())Exceptions.InformationDialog("La politica se ha Activado correctamente", st);
+                else Exceptions.InformationDialog("La politica se ha Desactivado correctamente", st);
             } catch (IOException | InterruptedException | ClassNotFoundException ex) {
                 Exceptions.ExceptionDialog(ex, st);
                 Exceptions.ErrorDialog("Activacion de Politica", "No se pudo activar la politica verifique el Ejecutor y Active mas tarde", st);

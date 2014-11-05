@@ -24,10 +24,12 @@ public class PoliticaEnvio implements Serializable{
     private Boolean control;
     private Boolean logs;
     private String modo;
+    private Integer puerto;
+    private String ip;
     private HashMap<Integer,Integer> dias;
     private ArrayList<String> tablespaces;
 
-    public PoliticaEnvio(String sid, String user, String password, String nombre, Boolean full, Boolean control, Boolean logs, String modo, HashMap<Integer, Integer> dias, ArrayList<String> tablespaces) {
+    public PoliticaEnvio(String sid, String ip, Integer puerto, String user, String password, String nombre, Boolean full, Boolean control, Boolean logs, String modo, HashMap<Integer, Integer> dias, ArrayList<String> tablespaces) {
         this.sid = sid;
         this.user = user;
         this.nombre = nombre;
@@ -38,6 +40,8 @@ public class PoliticaEnvio implements Serializable{
         this.dias = dias;
         this.tablespaces = tablespaces;
         this.password = password;
+        this.puerto = puerto;
+        this.ip = ip;
         activo = true;
     }
     
@@ -70,6 +74,22 @@ public class PoliticaEnvio implements Serializable{
     @Override
     public String toString(){
         return this.nombre+" "+tablespaces.toString();
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public Integer getPuerto() {
+        return puerto;
+    }
+
+    public void setPuerto(Integer puerto) {
+        this.puerto = puerto;
     }
 
     public String getSid() {

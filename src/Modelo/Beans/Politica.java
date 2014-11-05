@@ -131,7 +131,7 @@ public class Politica{
                 nd.put(i, Integer.parseInt(tokens.nextToken()));
             }
         }
-        PoliticaEnvio p= new PoliticaEnvio(this.getSID(),this.db.getUser(),this.getBaseDatos().getPassword(),this.getNombre(),this.full.get(),this.control.get(),this.logs.get(),this.modo.get(),nd,this.tablespaces);
+        PoliticaEnvio p= new PoliticaEnvio(this.getSID(),this.getBaseDatos().getAddress(),this.getBaseDatos().getPort(),this.db.getUser(),this.getBaseDatos().getPassword(),this.getNombre(),this.full.get(),this.control.get(),this.logs.get(),this.modo.get(),nd,this.tablespaces);
         p.setActivo(this.activo.get());
         return p;
     }

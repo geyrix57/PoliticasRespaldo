@@ -8,7 +8,6 @@ package Controlador;
 import Modelo.Beans.BaseDatos;
 import Modelo.Connection.Coneccion;
 import Modelo.Conteiners.RegistroBasesDatos;
-import Vista.Custom.NumberTextField;
 import Vista.Custom.Exceptions;
 import java.net.URL;
 import java.sql.SQLException;
@@ -96,6 +95,7 @@ public class CrearBDController implements Initializable {
     private void testAction(ActionEvent event) {
         try {
             Coneccion.getInstance().testConnection(new BaseDatos(this.tf_ip.getText(),Integer.parseInt(this.tf_puerto.getText()),this.tf_sid.getText(),this.tf_usuario.getText(),this.tf_pass.getText()));
+            Exceptions.InformationDialog("La prueba fue exitosa.", st);
         } catch (SQLException ex) {
             Exceptions.ExceptionDialog(ex, st);
             Logger.getLogger(CrearBDController.class.getName()).log(Level.SEVERE, null, ex);
